@@ -89,7 +89,7 @@ exports.editTask = async (req, res) => {
 	try {
 		const result = await Todo.findById(req.params.todoid);
 		if (!result) res.status(501).send("Unable to fetch task");
-		result.task[req.params.index] = req.body.editedTask;
+		result.task[req.params.index] = req.body.editedtask;
 		const updatedTodo = await result.save();
 		if (!updatedTodo) res.status(501).send("Unable to edit task");
 		res.status(200).json(updatedTodo);
