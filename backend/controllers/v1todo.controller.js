@@ -73,13 +73,15 @@ exports.addTask = async (req, res) => {
 
 exports.deleteTask = async (req, res) => {
 	try {
-		const result = await Todo.findByIdAndUpdate(req.params.todoid, {
-			task: task.splice(req.params.index, 1),
-		});
-		if (!result) res.status(501).send("Unable to delete task");
-		res.send(200).send("Task deleted");
+		const todoToBeUpdated = await Todo.findById(req.params.todoid);
+		if (!todoToBeUpdated)
+			res.status(501).send("Unable to fetch todo and task to be deleted");
+		todoToBeUpdated.task.splice(req.params.index, 1);
+		const updatedTodo = await todoToBeUpdated.save();
+		if (!updatedTodo) res.status(501).send("Unable to delete task");
+		res.status(200).send("Task deleted");
 	} catch (error) {
-		res.send(500).send(error.message);
+		res.status(500).send(error.message);
 	}
 };
 
@@ -90,8 +92,8 @@ exports.editTask = async (req, res) => {
 		result.task[req.params.index] = req.body.editedTask;
 		const updatedTodo = await result.save();
 		if (!updatedTodo) res.status(501).send("Unable to edit task");
-		res.send(200).json(updatedTodo);
+		res.status(200).json(updatedTodo);
 	} catch (error) {
-		res.send(500).send(error.message);
+		res.status(500).send(error.message);
 	}
 };
