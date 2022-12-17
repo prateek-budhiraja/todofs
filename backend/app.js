@@ -1,7 +1,7 @@
 const express = require("express");
 const app = express();
-const v1 = require("./routes/v1todo.route");
+const v1todo = require("./routes/v1todo.route");
 
-app.use("/v1", v1);
+app.use("/v1", v1todo);
 
 module.exports = app;
