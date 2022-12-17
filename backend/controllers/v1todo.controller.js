@@ -19,3 +19,24 @@ exports.createNewTodo = async (req, res) => {
 		res.status(500).send(error.message);
 	}
 };
+
+exports.deleteTodo = async (req, res) => {
+	try {
+		const result = await Todo.findByIdAndDelete(req.params.todoid);
+		if (!result) res.status(501).send("Unable to delete Todo");
+		res.send(200).send("Task deleted");
+	} catch (error) {
+		res.send(500).send(error.message);
+	}
+};
+
+exports.getAllTodos = async (req, res) => {
+	try {
+		const todoList = await Todo.find();
+		res
+			.status(200)
+			.send(todoList.length === 0 ? "No todos available" : todoList);
+	} catch (error) {
+		res.status(500).send(error.message);
+	}
+};
