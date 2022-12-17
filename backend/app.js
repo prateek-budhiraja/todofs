@@ -10,6 +10,11 @@ const v1todo = require("./routes/v1todo.route");
 const dbConnect = require("./config/database.connection");
 dbConnect();
 
+// express middleware
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+// custom router middleware
 app.use("/v1", v1todo);
 
 module.exports = app;
