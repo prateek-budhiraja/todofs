@@ -45,8 +45,10 @@ exports.getAllTodos = async (req, res) => {
 
 exports.editTodo = async (req, res) => {
 	try {
-		const updatedTodo = Todo.findByIdAndUpdate(req.params.todoid, {
-			todoGroup: req.body.todogroup,
+		const updatedName = req.body.todogroup;
+		if (!updatedName) res.status(400).send("Unable to fetch new todo name");
+		const updatedTodo = await Todo.findByIdAndUpdate(req.params.todoid, {
+			todoGroup: updatedName,
 		});
 		if (!updatedTodo) res.status(501).send("Unable to update todo group name");
 		res.status(200).json(updatedTodo);
