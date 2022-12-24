@@ -12,6 +12,21 @@ export default function ListTodo() {
 		console.log(result.data);
 	};
 
+	const handleTodoDelete = async (todoid) => {
+		const result = await axios.delete(`/v1/deletetodo/${todoid}`);
+		console.log(result);
+		fetchTodos();
+	};
+
+	const handleTodoEdit = async (todoid) => {
+		const newTodoName = prompt("Enter a new todo name");
+		const data = {
+			todogroup: newTodoName,
+		};
+		const result = await axios.post(`/v1/edittodo/${todoid}`, data);
+		fetchTodos();
+	};
+
 	useEffect(() => {
 		fetchTodos();
 	}, []);
@@ -20,7 +35,11 @@ export default function ListTodo() {
 		<>
 			{todos.map((todo) => (
 				<div>
-					<h3>{todo.todoGroup}</h3>
+					<h3>
+						{todo.todoGroup}{" "}
+						<button onClick={() => handleTodoEdit(todo._id)}>Edit</button>
+						<button onClick={() => handleTodoDelete(todo._id)}>Delete</button>
+					</h3>
 					{todo.task.map((t) => (
 						<p>{t}</p>
 					))}
