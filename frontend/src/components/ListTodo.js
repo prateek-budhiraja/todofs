@@ -40,6 +40,14 @@ export default function ListTodo() {
 		fetchTodos();
 	};
 
+	const handleAddTask = async (todoid) => {
+		const newtask = prompt("Enter a new task");
+		const result = await axios.post(`/v1/addtask/${todoid}`, {
+			newtask,
+		});
+		fetchTodos();
+	};
+
 	useEffect(() => {
 		fetchTodos();
 	}, []);
@@ -52,6 +60,7 @@ export default function ListTodo() {
 						{todo.todoGroup}{" "}
 						<button onClick={() => handleTodoEdit(todo._id)}>Edit</button>
 						<button onClick={() => handleTodoDelete(todo._id)}>Delete</button>
+						<button onClick={() => handleAddTask(todo._id)}>Add task</button>
 					</h3>
 					{todo.task.map((t, index) => (
 						<p>
