@@ -27,6 +27,19 @@ export default function ListTodo() {
 		fetchTodos();
 	};
 
+	const handleTaskEdit = async (todoid, index) => {
+		const editedtask = prompt("Enter a new task name");
+		const result = await axios.post(`/v1/editTask/${todoid}-${index}`, {
+			editedtask,
+		});
+		fetchTodos();
+	};
+
+	const handleTaskDelete = async (todoid, index) => {
+		const result = await axios.post(`/v1/deletetask/${todoid}-${index}`);
+		fetchTodos();
+	};
+
 	useEffect(() => {
 		fetchTodos();
 	}, []);
@@ -40,8 +53,16 @@ export default function ListTodo() {
 						<button onClick={() => handleTodoEdit(todo._id)}>Edit</button>
 						<button onClick={() => handleTodoDelete(todo._id)}>Delete</button>
 					</h3>
-					{todo.task.map((t) => (
-						<p>{t}</p>
+					{todo.task.map((t, index) => (
+						<p>
+							{t}
+							<button onClick={() => handleTaskEdit(todo._id, index)}>
+								Edit
+							</button>
+							<button onClick={() => handleTaskDelete(todo._id, index)}>
+								Delete
+							</button>
+						</p>
 					))}
 				</div>
 			))}
