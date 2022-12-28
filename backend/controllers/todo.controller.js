@@ -155,21 +155,25 @@ exports.addTask = service.asyncHandler(async (req, res) => {
  * @parameters todoid, index
  * @returns Updated Todo Object
  **************************************************/
-exports.deleteTask = async (req, res) => {
-	try {
-		const todoToBeUpdated = await Todo.findById(req.params.todoid);
-		if (!todoToBeUpdated)
-			return res
-				.status(501)
-				.send("Unable to fetch todo and task to be deleted");
-		todoToBeUpdated.task.splice(req.params.index, 1);
-		const updatedTodo = await todoToBeUpdated.save();
-		if (!updatedTodo) return res.status(501).send("Unable to delete task");
-		return res.status(200).send("Task deleted");
-	} catch (error) {
-		return res.status(500).send(error.message);
+exports.deleteTask = service.asyncHandler(async (req, res) => {
+	const todoToBeUpdated = await Todo.findById(req.params.todoid);
+
+	if (!todoToBeUpdated) {
+		throw new PropertyRequiredError("Todo Id is missing/invalid");
 	}
-};
+
+	todoToBeUpdated.task.splice(req.params.index, 1);
+	const updatedTodo = todoToBeUpdated.save();
+
+	if (!updatedTodo) {
+		throw new UnexpectedError("Unable to delete task");
+	}
+
+	res.status(200).json({
+		success: true,
+		todoToBeUpdated,
+	});
+});
 
 /**************************************************
  * @EDIT_TASK
