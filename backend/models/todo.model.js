@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 
 const todoSchema = mongoose.Schema({
-	todoGroup: {
+	name: {
 		type: String,
 		require: [true, "Todo should have a name"],
 	},
