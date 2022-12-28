@@ -85,6 +85,29 @@ exports.getAllTodos = service.asyncHandler(async (_req, res) => {
 });
 
 /**************************************************
+ * @GET_SORT_TODOS
+ * @REQUEST_TYPE GET
+ * @route http://localhost:4000/api/getsorttodos
+ * @description Fetch all Todos - sorted
+ * @parameters sortBy, ?direction
+ * @returns Array of Todo Objects
+ **************************************************/
+exports.getSortTodos = service.asyncHandler(async (req, res) => {
+	const { sortBy, direction = 1 } = req.query;
+	if (!sortBy) {
+		throw new PropertyRequiredError("SORT BY");
+	}
+	const todos = await Todo.find().sort({ [sortBy]: direction });
+	if (!todos) {
+		throw new UnexpectedError("Unable to fetch Todos");
+	}
+	res.status(200).json({
+		success: true,
+		todos,
+	});
+});
+
+/**************************************************
  * @EDIT_TODO
  * @REQUEST_TYPE POST
  * @route http://localhost:4000/api/edittodo/:todoid
