@@ -95,7 +95,7 @@ exports.getAllTodos = service.asyncHandler(async (_req, res) => {
 exports.editTodo = service.asyncHandler(async (req, res) => {
 	const { name } = req.body;
 	if (!name) {
-		PropertyRequiredError("Edited Todo Name");
+		throw new PropertyRequiredError("Edited Todo Name");
 	}
 	const updatedTodo = await Todo.findByIdAndUpdate(
 		req.params.todoid,
@@ -106,7 +106,7 @@ exports.editTodo = service.asyncHandler(async (req, res) => {
 	);
 
 	if (!updatedTodo) {
-		UnexpectedError("Unable to edit todo name");
+		throw new UnexpectedError("Unable to edit todo name");
 	}
 
 	res.status(200).json({
@@ -120,22 +120,32 @@ exports.editTodo = service.asyncHandler(async (req, res) => {
  * @REQUEST_TYPE POST
  * @route http://localhost:4000/api/addtask/:todoid
  * @description Adds a new task in todo
- * @parameters name, todoid
+ * @parameters taskName, todoid
  * @returns Updated Todo Object
  **************************************************/
-exports.addTask = async (req, res) => {
-	try {
-		const todoToBeUpdated = await Todo.findById(req.params.todoid);
-		if (!todoToBeUpdated)
-			return res.status(404).send("Adding task failed, todo not found");
-		todoToBeUpdated.task.push(req.body.newtask);
-		const updatedTodo = await todoToBeUpdated.save();
-		if (!updatedTodo) return res.status(501).send("Adding task failed");
-		res.status(200).json(updatedTodo);
-	} catch (error) {
-		return res.status(500).send(error.message);
+exports.addTask = service.asyncHandler(async (req, res) => {
+	const { taskName } = req.body;
+
+	if (!taskName) {
+		throw new PropertyRequiredError("Task Name");
 	}
-};
+	const updatedTodo = await Todo.findByIdAndUpdate(
+		req.params.todoid,
+		{
+			$push: { task: taskName },
+		},
+		{ new: true }
+	);
+
+	if (!updatedTodo) {
+		throw new UnexpectedError("Unable to add task to todo");
+	}
+
+	res.status(200).json({
+		success: true,
+		updatedTodo,
+	});
+});
 
 /**************************************************
  * @DELETE_TASK
@@ -162,7 +172,7 @@ exports.deleteTask = async (req, res) => {
 };
 
 /**************************************************
- * @EDIT_TODO
+ * @EDIT_TASK
  * @route http://localhost:4000/api/editTask/:todoid-:index
  * @REQUEST_TYPE POST
  * @description Edits a task
