@@ -1,8 +1,19 @@
 const Todo = require("../models/todo.model");
 const service = require("../services/asyncHandler");
-const { UnexpectedError } = require("../utils/CustomError");
+const {
+	UnexpectedError,
+	PropertyRequiredError,
+} = require("../utils/CustomError");
 
-exports.home = (req, res) => {
+/**************************************************
+ * @HOME
+ * @REQUEST_TYPE GET
+ * @route http://localhost:4000/api/home
+ * @description Home route for API
+ * @parameters
+ * @returns
+ **************************************************/
+exports.home = (_req, res) => {
 	res.status(204).send("api home");
 };
 
@@ -14,22 +25,25 @@ exports.home = (req, res) => {
  * @parameters name
  * @returns Todo Object
  **************************************************/
-exports.createNewTodo = async (req, res) => {
-	try {
-		const todoGroup = req.body.todogroup;
-		if (!todoGroup) return res.status(406).send("Todo group name is required");
-		const newTodoGroup = await Todo.create({
-			todoGroup,
-			task: [],
-		});
-		if (!newTodoGroup)
-			return res.status(501).send("Unable to create new task group");
-		return res.status(201).json(newTodoGroup);
-	} catch (error) {
-		console.log(error.message);
-		return res.status(500).send(error.message);
+exports.createTodo = service.asyncHandler(async (req, res) => {
+	const { name } = req.body;
+	if (!name) {
+		throw new PropertyRequiredError("Todo Name");
 	}
-};
+	const todo = await Todo.create({
+		name,
+		task: [],
+	});
+
+	if (!todo) {
+		throw new UnexpectedError("Unable to create new Todo");
+	}
+
+	res.status(200).json({
+		success: true,
+		todo,
+	});
+});
 
 /**************************************************
  * @DELETE_TODO
@@ -39,15 +53,17 @@ exports.createNewTodo = async (req, res) => {
  * @parameters todoid
  * @returns Success message
  **************************************************/
-exports.deleteTodo = async (req, res) => {
-	try {
-		const result = await Todo.findByIdAndDelete(req.params.todoid);
-		if (!result) return res.status(501).send("Unable to delete Todo");
-		return res.status(200).send("Todo deleted");
-	} catch (error) {
-		return res.status(500).send(error.message);
+exports.deleteTodo = service.asyncHandler(async (req, res) => {
+	const todoToDelete = await Todo.findByIdAndDelete(req.params.todoid);
+	if (!todoToDelete) {
+		throw new UnexpectedError("Unable to delete Todo");
 	}
-};
+
+	res.status(200).json({
+		success: true,
+		message: `Todo Deleted - ${todoToDelete.name}`,
+	});
+});
 
 /**************************************************
  * @GET_ALL_TODOS
