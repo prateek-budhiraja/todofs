@@ -88,25 +88,32 @@ exports.getAllTodos = service.asyncHandler(async (_req, res) => {
  * @EDIT_TODO
  * @REQUEST_TYPE POST
  * @route http://localhost:4000/api/edittodo/:todoid
- * @description Creates new Todo
+ * @description Edit a Todo
  * @parameters name, todoid
  * @returns Edited Todo Object
  **************************************************/
-exports.editTodo = async (req, res) => {
-	try {
-		const updatedName = req.body.todogroup;
-		if (!updatedName)
-			return res.status(400).send("Unable to fetch new todo name");
-		const updatedTodo = await Todo.findByIdAndUpdate(req.params.todoid, {
-			todoGroup: updatedName,
-		});
-		if (!updatedTodo)
-			return res.status(501).send("Unable to update todo group name");
-		return res.status(200).json(updatedTodo);
-	} catch (error) {
-		return res.status(500).send(error.message);
+exports.editTodo = service.asyncHandler(async (req, res) => {
+	const { name } = req.body;
+	if (!name) {
+		PropertyRequiredError("Edited Todo Name");
 	}
-};
+	const updatedTodo = await Todo.findByIdAndUpdate(
+		req.params.todoid,
+		{
+			name,
+		},
+		{ new: true }
+	);
+
+	if (!updatedTodo) {
+		UnexpectedError("Unable to edit todo name");
+	}
+
+	res.status(200).json({
+		success: true,
+		updatedTodo,
+	});
+});
 
 /**************************************************
  * @ADD_TASK
