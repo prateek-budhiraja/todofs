@@ -1,4 +1,6 @@
 const Todo = require("../models/todo.model");
+const service = require("../services/asyncHandler");
+const { UnexpectedError } = require("../utils/CustomError");
 
 exports.home = (req, res) => {
 	res.status(204).send("api home");
@@ -55,16 +57,16 @@ exports.deleteTodo = async (req, res) => {
  * @parameters
  * @returns Array of Todo Objects
  **************************************************/
-exports.getAllTodos = async (req, res) => {
-	try {
-		const todoList = await Todo.find();
-		return res
-			.status(200)
-			.send(todoList.length === 0 ? "No todos available" : todoList);
-	} catch (error) {
-		return res.status(500).send(error.message);
+exports.getAllTodos = service.asyncHandler(async (_req, res) => {
+	const todos = await Todo.find();
+	if (!todos) {
+		throw new UnexpectedError("Unable to fetch Todos");
 	}
-};
+	res.status(200).json({
+		success: true,
+		todos,
+	});
+});
 
 /**************************************************
  * @EDIT_TODO
