@@ -21,6 +21,6 @@ router.post("/edittodo/:todoid", editTodo);
 
 router.post("/addtask/:todoid", addTask);
 router.post("/deletetask/:todoid-:index", deleteTask);
-router.post("/editTask/:todoid-:index", editTask);
+router.post("/edittask/:todoid-:index", editTask);
 
 module.exports = router;
