@@ -176,18 +176,30 @@ exports.deleteTask = async (req, res) => {
  * @route http://localhost:4000/api/editTask/:todoid-:index
  * @REQUEST_TYPE POST
  * @description Edits a task
- * @parameters name, todoid, index
+ * @parameters taskName, todoid, index
  * @returns Updated Todo Object
  **************************************************/
-exports.editTask = async (req, res) => {
-	try {
-		const result = await Todo.findById(req.params.todoid);
-		if (!result) return res.status(501).send("Unable to fetch task");
-		result.task[req.params.index] = req.body.editedtask;
-		const updatedTodo = await result.save();
-		if (!updatedTodo) return res.status(501).send("Unable to edit task");
-		return res.status(200).json(updatedTodo);
-	} catch (error) {
-		return res.status(500).send(error.message);
+exports.editTask = service.asyncHandler(async (req, res) => {
+	const { taskName } = req.body;
+	if (!taskName) {
+		throw new PropertyRequiredError("Task Name");
 	}
-};
+
+	const taskToBeUpdated = `task.${req.params.index}`;
+	const updatedTodo = await Todo.findByIdAndUpdate(
+		req.params.todoid,
+		{
+			$set: { [taskToBeUpdated]: taskName },
+		},
+		{ new: true }
+	);
+
+	if (!updatedTodo) {
+		throw new UnexpectedError("Unable to edit Todo");
+	}
+
+	res.status(200).json({
+		success: true,
+		updatedTodo,
+	});
+});
