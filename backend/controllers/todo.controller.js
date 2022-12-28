@@ -1,11 +1,17 @@
 const Todo = require("../models/todo.model");
 
 exports.home = (req, res) => {
-	res.status(204).send("v1 api home");
+	res.status(204).send("api home");
 };
 
-// Todo Group controllers
-
+/**************************************************
+ * @CREATE_TODO
+ * @REQUEST_TYPE POST
+ * @route http://localhost:4000/api/createtodo
+ * @description Creates new Todo
+ * @parameters name
+ * @returns Todo Object
+ **************************************************/
 exports.createNewTodo = async (req, res) => {
 	try {
 		const todoGroup = req.body.todogroup;
@@ -23,6 +29,14 @@ exports.createNewTodo = async (req, res) => {
 	}
 };
 
+/**************************************************
+ * @DELETE_TODO
+ * @REQUEST_TYPE DELETE
+ * @route http://localhost:4000/api/deletetodo/:todoid
+ * @description Delete a Todo
+ * @parameters todoid
+ * @returns Success message
+ **************************************************/
 exports.deleteTodo = async (req, res) => {
 	try {
 		const result = await Todo.findByIdAndDelete(req.params.todoid);
@@ -33,6 +47,14 @@ exports.deleteTodo = async (req, res) => {
 	}
 };
 
+/**************************************************
+ * @GET_ALL_TODOS
+ * @REQUEST_TYPE GET
+ * @route http://localhost:4000/api/getalltodos
+ * @description Fetch all Todos
+ * @parameters
+ * @returns Array of Todo Objects
+ **************************************************/
 exports.getAllTodos = async (req, res) => {
 	try {
 		const todoList = await Todo.find();
@@ -44,6 +66,14 @@ exports.getAllTodos = async (req, res) => {
 	}
 };
 
+/**************************************************
+ * @EDIT_TODO
+ * @REQUEST_TYPE POST
+ * @route http://localhost:4000/api/edittodo/:todoid
+ * @description Creates new Todo
+ * @parameters name, todoid
+ * @returns Edited Todo Object
+ **************************************************/
 exports.editTodo = async (req, res) => {
 	try {
 		const updatedName = req.body.todogroup;
@@ -60,8 +90,14 @@ exports.editTodo = async (req, res) => {
 	}
 };
 
-// Task controllers
-
+/**************************************************
+ * @ADD_TASK
+ * @REQUEST_TYPE POST
+ * @route http://localhost:4000/api/addtask/:todoid
+ * @description Adds a new task in todo
+ * @parameters name, todoid
+ * @returns Updated Todo Object
+ **************************************************/
 exports.addTask = async (req, res) => {
 	try {
 		const todoToBeUpdated = await Todo.findById(req.params.todoid);
@@ -76,6 +112,14 @@ exports.addTask = async (req, res) => {
 	}
 };
 
+/**************************************************
+ * @DELETE_TASK
+ * @route http://localhost:4000/api/deletetask/:todoid-:index
+ * @REQUEST_TYPE POST
+ * @description Deletes a task from todo
+ * @parameters todoid, index
+ * @returns Updated Todo Object
+ **************************************************/
 exports.deleteTask = async (req, res) => {
 	try {
 		const todoToBeUpdated = await Todo.findById(req.params.todoid);
@@ -92,6 +136,14 @@ exports.deleteTask = async (req, res) => {
 	}
 };
 
+/**************************************************
+ * @EDIT_TODO
+ * @route http://localhost:4000/api/editTask/:todoid-:index
+ * @REQUEST_TYPE POST
+ * @description Edits a task
+ * @parameters name, todoid, index
+ * @returns Updated Todo Object
+ **************************************************/
 exports.editTask = async (req, res) => {
 	try {
 		const result = await Todo.findById(req.params.todoid);
