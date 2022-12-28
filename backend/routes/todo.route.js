@@ -4,7 +4,7 @@ const router = express.Router();
 // import controllers
 const {
 	home,
-	createNewTodo,
+	createTodo,
 	deleteTodo,
 	getAllTodos,
 	addTask,
@@ -14,7 +14,7 @@ const {
 } = require("../controllers/todo.controller");
 
 router.get("/", home);
-router.post("/createtodo", createNewTodo);
+router.post("/createtodo", createTodo);
 router.delete("/deletetodo/:todoid", deleteTodo);
 router.get("/getalltodos", getAllTodos);
 router.post("/edittodo/:todoid", editTodo);
