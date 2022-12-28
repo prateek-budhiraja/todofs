@@ -6,7 +6,7 @@ const app = express();
 const cors = require("cors");
 
 // Routes
-const v1todo = require("./routes/v1todo.route");
+const v1todo = require("./routes/todo.route");
 
 // Connection with DB
 const dbConnect = require("./config/database.connection");
