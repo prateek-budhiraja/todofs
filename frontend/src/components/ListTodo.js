@@ -1,11 +1,10 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
+import CreateTodo from "./CreateTodo";
 import Todo from "./Todo";
+import req from "../utils/request";
 
-import "bootstrap/dist/css/bootstrap.min.css";
-import { Accordion } from "react-bootstrap";
-
-axios.defaults.baseURL = "http://localhost:4000/api";
+import { Accordion, AccordionButton } from "react-bootstrap";
 
 export default function ListTodo() {
 	const [todos, setTodos] = useState([]);
@@ -13,7 +12,38 @@ export default function ListTodo() {
 	const fetchTodos = async () => {
 		const result = await axios.get("/getalltodos");
 		setTodos(result.data.todos);
-		console.log(result.data.todos);
+	};
+
+	const handleAction = async (data) => {
+		// handlers based on the action specified
+		if (data.action === req.CREATE_TODO) {
+			const result = await axios.post("/createtodo", { name: data.name });
+		} else if (data.action === req.DELETE_TODO) {
+			const result = await axios.delete(`/deletetodo/${data.todoid}`);
+		} else if (data.action === req.EDIT_TODO) {
+			const newTodoName = prompt("Enter a new todo name");
+			const result = await axios.post(`/edittodo/${data.todoid}`, {
+				name: newTodoName,
+			});
+		} else if (data.action === req.CREATE_TASK) {
+			const newtask = prompt("Enter a new task");
+			const result = await axios.post(`/addtask/${data.todoid}`, {
+				taskName: newtask,
+			});
+		} else if (data.action === req.EDIT_TASK) {
+			const editedtask = prompt("Enter a new task name");
+			const result = await axios.post(
+				`/editTask/${data.todoid}-${data.index}`,
+				{
+					taskName: editedtask,
+				}
+			);
+		} else if (data.action === req.DELETE_TASK) {
+			const result = await axios.post(
+				`/deletetask/${data.todoid}-${data.index}`
+			);
+		}
+		fetchTodos();
 	};
 
 	useEffect(() => {
@@ -22,67 +52,19 @@ export default function ListTodo() {
 
 	return (
 		<>
+			<CreateTodo handleAction={handleAction} />
+
+			<h3 className="display-3 text-center mt-5 mb-5">YOUR TODOS</h3>
 			<Accordion defaultActiveKey="">
 				{todos.map((todo, index) => (
-					<Todo todo={todo} index={index} />
+					<Todo
+						todo={todo}
+						index={index}
+						key={index}
+						handleAction={handleAction}
+					/>
 				))}
 			</Accordion>
 		</>
 	);
 }
-
-// <div>
-// 	<h3>
-// 		{todo.todoGroup}{" "}
-// 		<button onClick={() => handleTodoEdit(todo._id)}>Edit</button>
-// 		<button onClick={() => handleTodoDelete(todo._id)}>Delete</button>
-// 		<button onClick={() => handleAddTask(todo._id)}>Add task</button>
-// 	</h3>
-// 	{todo.task.map((t, index) => (
-// 		<p>
-// 			{t}
-// 			<button onClick={() => handleTaskEdit(todo._id, index)}>
-// 				Edit
-// 			</button>
-// 			<button onClick={() => handleTaskDelete(todo._id, index)}>
-// 				Delete
-// 			</button>
-// 		</p>
-// 	))}
-// </div>
-
-// const handleTodoDelete = async (todoid) => {
-// 	const result = await axios.delete(`/deletetodo/${todoid}`);
-// 	console.log(result);
-// 	fetchTodos();
-// };
-
-// const handleTodoEdit = async (todoid) => {
-// 	const newTodoName = prompt("Enter a new todo name");
-// 	const data = {
-// 		todogroup: newTodoName,
-// 	};
-// 	const result = await axios.post(`/edittodo/${todoid}`, data);
-// 	fetchTodos();
-// };
-
-// const handleTaskEdit = async (todoid, index) => {
-// 	const editedtask = prompt("Enter a new task name");
-// 	const result = await axios.post(`/editTask/${todoid}-${index}`, {
-// 		editedtask,
-// 	});
-// 	fetchTodos();
-// };
-
-// const handleTaskDelete = async (todoid, index) => {
-// 	const result = await axios.post(`/deletetask/${todoid}-${index}`);
-// 	fetchTodos();
-// };
-
-// const handleAddTask = async (todoid) => {
-// 	const newtask = prompt("Enter a new task");
-// 	const result = await axios.post(`/addtask/${todoid}`, {
-// 		newtask,
-// 	});
-// 	fetchTodos();
-// };
