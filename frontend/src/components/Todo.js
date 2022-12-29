@@ -1,29 +1,79 @@
 import React from "react";
-import { Accordion, ListGroup } from "react-bootstrap";
+import { Accordion } from "react-bootstrap";
+import { FaEdit, FaTrash, FaPlus } from "react-icons/fa";
+import { BiNoEntry } from "react-icons/bi";
+import req from "../utils/request";
 
-export default function ({ todo, index }) {
+import axios from "axios";
+
+export default function ({ todo, index, handleAction }) {
 	return (
 		<Accordion.Item eventKey={index}>
-			<Accordion.Header>{todo.name}</Accordion.Header>
+			<Accordion.Header className={"fs-2 d-flex justify-content-between"}>
+				{todo.name.toUpperCase()}
+			</Accordion.Header>
 			<Accordion.Body>
-				{todo.task.map((task) => (
-					<div>
-						<span>{task}</span>
-						<button>Edit</button>
-						<button>delete</button>
+				<div className={"d-flex gap-4 justify-content-center mb-3"}>
+					<FaPlus
+						className={"text-success fs-4"}
+						onClick={() =>
+							handleAction({
+								action: req.CREATE_TASK,
+								todoid: todo._id,
+							})
+						}
+					/>
+					<FaEdit
+						className={"text-warning fs-4"}
+						onClick={() =>
+							handleAction({
+								action: req.EDIT_TODO,
+								todoid: todo._id,
+							})
+						}
+					/>
+					<FaTrash
+						className={"text-danger fs-4"}
+						onClick={() =>
+							handleAction({
+								todoid: todo._id,
+								action: req.DELETE_TODO,
+							})
+						}
+					/>
+				</div>
+				{todo.task.map((task, index) => (
+					<div
+						className={"d-flex gap-4 justify-content-end"}
+						id={"todo-operations"}
+						key={index}
+					>
+						<span className={"flex-fill"}>
+							{task[0].toUpperCase() + task.slice(1)}
+						</span>
+						<FaEdit
+							className={"text-warning fs-4"}
+							onClick={() =>
+								handleAction({
+									action: req.EDIT_TASK,
+									todoid: todo._id,
+									index: index,
+								})
+							}
+						/>
+						<BiNoEntry
+							className={"text-danger fs-4"}
+							onClick={() =>
+								handleAction({
+									action: req.DELETE_TASK,
+									todoid: todo._id,
+									index: index,
+								})
+							}
+						/>
 					</div>
 				))}
 			</Accordion.Body>
 		</Accordion.Item>
 	);
-}
-
-{
-	/* <ListGroup>
-	<ListGroup.Item>Cras justo odio</ListGroup.Item>
-	<ListGroup.Item>Dapibus ac facilisis in</ListGroup.Item>
-	<ListGroup.Item>Morbi leo risus</ListGroup.Item>
-	<ListGroup.Item>Porta ac consectetur ac</ListGroup.Item>
-	<ListGroup.Item>Vestibulum at eros</ListGroup.Item>
-</ListGroup>; */
 }
