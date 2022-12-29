@@ -11,3 +11,15 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+.accordion-button {
+  font-size: 1.6rem !important;
+}
+
+.accordion-body span {
+  font-size: 1.3rem !important;
+}
+
+#todo-operations {
+  margin: 0 100px 0 10px;
+}
