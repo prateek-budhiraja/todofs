@@ -7,6 +7,7 @@ const {
 	createTodo,
 	deleteTodo,
 	getAllTodos,
+	getSortTodos,
 	addTask,
 	deleteTask,
 	editTask,
@@ -17,6 +18,7 @@ router.get("/", home);
 router.post("/createtodo", createTodo);
 router.delete("/deletetodo/:todoid", deleteTodo);
 router.get("/getalltodos", getAllTodos);
+router.get("/getsorttodos", getSortTodos);
 router.post("/edittodo/:todoid", editTodo);
 
 router.post("/addtask/:todoid", addTask);
