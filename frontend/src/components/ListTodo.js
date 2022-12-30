@@ -4,7 +4,7 @@ import CreateTodo from "./CreateTodo";
 import Todo from "./Todo";
 import req from "../utils/request";
 
-import { Accordion, AccordionButton } from "react-bootstrap";
+import { Accordion } from "react-bootstrap";
 import Sort from "./Sort";
 
 export default function ListTodo() {

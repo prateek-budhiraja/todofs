@@ -4,8 +4,6 @@ import { FaEdit, FaTrash, FaPlus } from "react-icons/fa";
 import { BiNoEntry } from "react-icons/bi";
 import req from "../utils/request";
 
-import axios from "axios";
-
 export default function ({ todo, index, handleAction }) {
 	return (
 		<Accordion.Item eventKey={index}>
