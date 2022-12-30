@@ -12,7 +12,6 @@ const {
 	deleteTask,
 	editTask,
 	editTodo,
-	getSortTodos,
 } = require("../controllers/todo.controller");
 
 router.get("/", home);
