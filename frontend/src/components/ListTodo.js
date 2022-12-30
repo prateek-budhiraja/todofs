@@ -5,12 +5,20 @@ import Todo from "./Todo";
 import req from "../utils/request";
 
 import { Accordion, AccordionButton } from "react-bootstrap";
+import Sort from "./Sort";
 
 export default function ListTodo() {
 	const [todos, setTodos] = useState([]);
 
 	const fetchTodos = async () => {
 		const result = await axios.get("/getalltodos");
+		setTodos(result.data.todos);
+	};
+
+	const fetchSortTodos = async (data) => {
+		const result = await axios.get(
+			`/getsorttodos?sortBy=${data.sortBy}&direction=${data.direction}`
+		);
 		setTodos(result.data.todos);
 	};
 
@@ -42,6 +50,9 @@ export default function ListTodo() {
 			const result = await axios.post(
 				`/deletetask/${data.todoid}-${data.index}`
 			);
+		} else if (data.action === req.SORT) {
+			const result = fetchSortTodos(data);
+			return;
 		}
 		fetchTodos();
 	};
@@ -54,7 +65,8 @@ export default function ListTodo() {
 		<>
 			<CreateTodo handleAction={handleAction} />
 
-			<h3 className="display-3 text-center mt-5 mb-5">YOUR TODOS</h3>
+			<h3 className="display-3 text-center mt-5 mb-3">YOUR TODOS</h3>
+			<Sort handleAction={handleAction} />
 			<Accordion defaultActiveKey="">
 				{todos.map((todo, index) => (
 					<Todo
