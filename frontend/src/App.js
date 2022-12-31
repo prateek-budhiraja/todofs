@@ -1,15 +1,20 @@
 import Heading from "./components/Heading";
 import ListTodo from "./components/ListTodo";
+import Signup from "./components/Signup";
+import Login from "./components/Login";
 import "bootstrap/dist/css/bootstrap.min.css";
-import { useEffect, useState } from "react";
-import axios from "axios";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 function App() {
 	return (
-		<div>
-			<Heading />
-			<ListTodo />
-		</div>
+		<BrowserRouter>
+			<Routes>
+				<Route path="/" element={<Login />} />
+				<Route path="/signup" element={<Signup />} />
+			</Routes>
+			{/* <Heading />
+			<ListTodo /> */}
+		</BrowserRouter>
 	);
 }
 
