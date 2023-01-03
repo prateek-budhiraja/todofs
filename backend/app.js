@@ -7,6 +7,7 @@ const cors = require("cors");
 
 // Routes
 const todo = require("./routes/todo.route");
+const auth = require("./routes/auth.route");
 
 // Connection with DB
 const dbConnect = require("./config/database.connection");
@@ -19,5 +20,6 @@ app.use(cors());
 
 // custom router middleware
 app.use("/api", todo);
+app.use("/api/auth", auth);
 
 module.exports = app;
