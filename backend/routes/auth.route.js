@@ -3,7 +3,7 @@ const { home, login, signup } = require("../controllers/auth.controller");
 const router = express.Router();
 
 router.get("/", home);
-router.get("/login", login);
+router.post("/login", login);
 router.post("/signup", signup);
 
 module.exports = router;
