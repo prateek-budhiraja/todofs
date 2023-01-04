@@ -2,13 +2,26 @@ import Heading from "./components/Heading";
 import ListTodo from "./components/ListTodo";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { useEffect, useState } from "react";
-import axios from "axios";
+import jwt_decode from "jwt-decode";
+import Cookies from "js-cookie";
 
 function App() {
+	const [user, setUser] = useState({});
+
+	const fetchUser = () => {
+		try {
+			const token = Cookies.get("token");
+			setUser(jwt_decode(token));
+		} catch (err) {
+			console.log(err);
+		}
+	};
+
+	useEffect(() => fetchUser(), []);
 	return (
 		<div>
 			<Heading />
-			<ListTodo />
+			{Object.keys(user).length ? <ListTodo /> : <h1>Please login first</h1>}
 		</div>
 	);
 }
