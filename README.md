@@ -22,8 +22,8 @@ To run this project, you will need to add the following environment variables to
 `MONGO_URI`
 
 > Frontend
-> s
-> `PROJECT_ID`
+
+`PROJECT_ID`
 
 ## Installation
 
