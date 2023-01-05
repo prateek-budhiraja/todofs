@@ -21,7 +21,13 @@ function App() {
 	return (
 		<div>
 			<Heading />
-			{Object.keys(user).length ? <ListTodo /> : <h1>Please login first</h1>}
+			{Object.keys(user).length ? (
+				<ListTodo />
+			) : (
+				<h1 className="display-5 text-center">
+					Please <a href="/login">login</a> to see todos
+				</h1>
+			)}
 		</div>
 	);
 }
