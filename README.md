@@ -62,6 +62,7 @@ Change the branch and see the instructions on how to configure appwrite with thi
 
 ## Screenshots
 
+![login](./images/auth1.png)
 ![default](./images/todofs1.png)
 ![new_todo](./images/todofs2.png)
 ![new_tasks](./images/todofs3.png)
