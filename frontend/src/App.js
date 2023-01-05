@@ -1,10 +1,9 @@
+import "bootstrap/dist/css/bootstrap.min.css";
 import Heading from "./components/Heading";
 import ListTodo from "./components/ListTodo";
-import "bootstrap/dist/css/bootstrap.min.css";
-import { useEffect } from "react";
 import { account } from "./appwrite/appwrite.config";
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 function App() {
 	const navigate = useNavigate();
